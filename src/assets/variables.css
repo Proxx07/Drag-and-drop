@@ -1,0 +1,30 @@
+@import 'fonts/acron/fonts.css';
+
+:root {
+  --primary: #397AF5;
+  --secondary: #EDF2FF;
+
+  --primary-color: #212121;
+  --secondary-color: #949494;
+
+  --primary-bg: #E1E1E1;
+
+/*  ================== fonts ================== */
+  --primary-font: 'Acrom' sans-serif;
+
+  /* --font-{size}-{weight} */
+  --font-s: normal normal 1.2rem/1.6 var(--primary-font);
+  --font-s-m: normal 500 1.2rem/1.6 var(--primary-font);
+  --font-s-b: normal bold 1.2rem/1.6 var(--primary-font);
+
+  --font-m: normal normal 1.6rem/1.25 var(--primary-font);
+  --font-m-m: normal 500 1.6rem/1.25 var(--primary-font);
+  --font-m-b: normal bold 1.6rem/1.25 var(--primary-font);
+
+  --font-l: normal 600 2.8rem/1.3 var(--primary-font);
+/*  ================== fonts end ================== */
+}
+
+html {
+  font-size: 10px;
+}
