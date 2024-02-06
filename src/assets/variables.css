@@ -7,13 +7,21 @@
   --primary-color: #212121;
   --secondary-color: #949494;
 
-  --primary-bg: #E1E1E1;
+  --primary-bg: #fff;
+  --secondary-bg: rgba(57, 122, 245, 0.3);
+
+  --transition: all 0.4s;
+
+  --border-radius-s: 1.2rem;
+  --border-radius-l: 3rem;
+
+  --shadow: 0 .4rem .4rem 0 rgba(0, 0, 0, 0.06);
 
 /*  ================== fonts ================== */
-  --primary-font: 'Acrom' sans-serif;
+  --primary-font: 'Acrom', sans-serif;
 
   /* --font-{size}-{weight} */
-  --font-s: normal normal 1.2rem/1.6 var(--primary-font);
+  --font-s: normal normal 1.2rem/1 var(--primary-font);
   --font-s-m: normal 500 1.2rem/1.6 var(--primary-font);
   --font-s-b: normal bold 1.2rem/1.6 var(--primary-font);
 

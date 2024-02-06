@@ -4,10 +4,11 @@ import type {IAccordionItem} from "@/types";
 import {list as arr} from "@/data";
 
 const list = ref<IAccordionItem[]>(arr)
+
 </script>
 
 <template>
-<v-accordion :list="list" parent-key="acc"/>
+  <v-accordion v-model="list"/>
 </template>
 
 <style lang="scss" scoped>

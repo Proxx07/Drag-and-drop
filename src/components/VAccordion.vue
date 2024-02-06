@@ -1,38 +1,60 @@
 <script setup lang="ts">
+import VAccordionHeader from "@/components/VAccordionHeader.vue";
 import {useAccordionList, type IProps, type IEmits} from "@/composables/useAccordionList";
 
 const props = defineProps<IProps>();
 const emit = defineEmits<IEmits>();
 
-const {activeItemIndex, openedIndex, itemsCount, mouseY, mouseDownHandler, mouseMoveHandler, mouseLeaveHandler, mouseUpHandler} = useAccordionList(props, emit)
+const {
+  activeItemIndex,
+  openedIndex,
+  itemsCount,
+  mouseY,
+  isChildItem,
+
+  mouseDownHandler,
+  mouseMoveHandler,
+  mouseLeaveHandler,
+  mouseUpHandler,
+  mouseOverHandler
+} = useAccordionList(props, emit)
 
 </script>
 
 <template>
-  <div class="accordion" @mousemove="mouseMoveHandler" @mouseleave="mouseLeaveHandler">
-    <div class="accordion-layout" ref="layout" v-for="index in itemsCount" :key="list[index].id">
+  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseleave.stop="mouseLeaveHandler">
+    <div class="accordion-layout" v-for="i in itemsCount" :key="modelValue[i].id" @mouseover.stop="mouseOverHandler" @mouseup.stop="mouseUpHandler">
       <div
-        :class="{
+          :class="{
           'accordion__item': true,
-          'accordion__item--fixed': activeItemIndex === index
+          'accordion__item--child': isChildItem,
+          'accordion__item--fixed': activeItemIndex === i
         }"
-        :style="{
-          '--top': activeItemIndex === index ? mouseY : '',
-          '--cursor': activeItemIndex === index ? 'grabbing' : 'grab'
+          :style="{
+          '--top': activeItemIndex === i ? mouseY : '',
+          '--cursor': activeItemIndex === i ? 'grabbing' : 'grab'
         }"
-        @mousedown.stop="mouseDownHandler(index)"
-        @mouseup="mouseUpHandler"
+          @mousedown.stop="mouseDownHandler(i)"
       >
 
-        <div class="accordion__item-title">
-          {{list[index].title}} index: {{index}}
-          <button v-if="list[index].childs" @click.stop="openedIndex = index">Open</button>
-        </div>
-
-        <div class="accordion__item-body" v-if="list[index].childs && openedIndex === index">
-          <!-- TS не обращает внимания на верхнюю проверку и ругается что childs может быть undefined -->
-          <v-accordion :list="list[index].childs ?? []"/>
-        </div>
+        <v-accordion-header
+            v-model:openedIndex="openedIndex"
+            :key="modelValue[i].id"
+            :name="modelValue[i].title"
+            :index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+            :order="i + 1"
+            :folders="modelValue[i]?.childs"
+            :class="[isChildItem && 'child-item']"
+        />
+<!--        <Transition name="fade">-->
+          <div class="accordion__item-body" v-if="openedIndex === i">
+            <v-accordion
+                v-if="modelValue[i]?.childs"
+                v-model="modelValue[i].childs"
+                :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+            />
+          </div>
+<!--        </Transition>-->
       </div>
     </div>
   </div>
@@ -40,11 +62,21 @@ const {activeItemIndex, openedIndex, itemsCount, mouseY, mouseDownHandler, mouse
 
 <style scoped lang="scss">
 .accordion-layout {
-  border: 1px dashed var(--primary);
-  border-radius: 5px;
-  min-height: 8rem;
   background: var(--secondary);
-  margin-left: 1rem;
+  border-radius: var(--border-radius-s);
+  min-height: 8rem;
+  margin-bottom: .6rem;
+  border: 1px solid var(--primary-bg);
+
+  &:has(> .accordion__item--fixed) {
+    border-color: var(--primary);
+    border-style: dashed;
+  }
+
+  &:has(> .accordion__item--child) {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
 }
 
 .accordion {
@@ -53,23 +85,14 @@ const {activeItemIndex, openedIndex, itemsCount, mouseY, mouseDownHandler, mouse
 
   &__item {
     width: 100%;
-    min-height: 8rem;
-    max-width: 1440px;
-    &-title {
-      padding: 1rem;
-      cursor: var(--cursor);
-      display: flex;
-      align-items: center;
-      background: var(--primary-bg);
-      margin: -0.1rem;
-      border-radius: 5px;
-      min-height: 8rem;
-    }
+    max-width: 165rem;
+    margin: -1px 0;
 
     &--fixed {
       position: fixed;
+      pointer-events: none;
       top: calc(var(--top) * 1px);
-      transform: translateY(-50%);
+      transform: translateY(-30%);
     }
   }
 }
