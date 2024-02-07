@@ -25,7 +25,8 @@ const {
 </script>
 
 <template>
-  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseleave.stop="mouseLeaveHandler" @mouseup.stop="mouseUpHandler">
+<!--  v-outside-click="mouseUpHandler"-->
+  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseup.stop="mouseUpHandler" @mouseleave="mouseLeaveHandler">
     <div
       class="accordion-layout"
       v-for="i in itemsCount" :key="modelValue[i].id"
@@ -74,6 +75,7 @@ const {
   min-height: 8rem;
   margin-bottom: .6rem;
   border: 1px solid var(--primary-bg);
+
   &:has(> .accordion__item--fixed) {
     border-color: var(--primary);
     border-style: dashed;
@@ -100,6 +102,7 @@ const {
       pointer-events: none;
       top: calc(var(--top) * 1px);
       transform: translateY(-30%);
+      z-index: 100;
     }
   }
 }

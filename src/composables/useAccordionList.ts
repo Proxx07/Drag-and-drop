@@ -38,7 +38,7 @@ export const useAccordionList = (props: IProps, emit: IEmits) => {
     timeout = setTimeout(() => {
       activeItemIndex.value = index
       openedIndex.value = undefined
-    }, 250)
+    }, 150)
   }
 
   const mouseUpHandler = () => {

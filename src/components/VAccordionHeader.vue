@@ -76,7 +76,7 @@ const deleteHandler = (index: string | number) => {
           @click="arrowClickHandler(order - 1)"
       />
 
-      <div class="dropdown-wrapper">
+      <div class="dropdown-wrapper" v-outside-click="() => dropdown = false">
         <v-button :class="['secondary', dropdown && 'active']" :icon="dots" @click="dropdown = !dropdown"/>
         <Transition name="fade">
           <v-dropdown v-if="dropdown">
@@ -85,7 +85,6 @@ const deleteHandler = (index: string | number) => {
           </v-dropdown>
         </Transition>
       </div>
-
     </div>
   </div>
 </template>
