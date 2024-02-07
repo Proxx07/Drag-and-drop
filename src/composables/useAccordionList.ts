@@ -6,17 +6,15 @@ export interface IProps {
 }
 
 export interface IEmits {
-  (e: 'onmousedown', index: number): void;
-  (e: 'onmouseleave'): void;
-  (e: 'onmousemove'): void;
+  (e: 'update:modelValue', list: IAccordionItem[]): void;
 }
 export const useAccordionList = (props: IProps, emit: IEmits) => {
   let timeout: NodeJS.Timeout;
 
-  const openedIndex = ref<number>();
+  const openedIndex = ref<number | null>(null);
   const activeItemIndex = ref<number | null>(null);
 
-  const mouseY = ref<number>()
+  const mouseY = ref<number | null>()
 
   const itemsCount = computed(() => {
     return Array.from(Array(props.modelValue.length).keys())
@@ -27,31 +25,35 @@ export const useAccordionList = (props: IProps, emit: IEmits) => {
   const mouseMoveHandler = (event: MouseEvent) => {
     if (activeItemIndex.value === null) return
     mouseY.value = event.clientY
-    //emit('onmousemove')
   }
 
-  const mouseLeaveHandler = (event: MouseEvent) => {
+  const mouseLeaveHandler = () => {
     if (activeItemIndex.value === null) return
     activeItemIndex.value = null
     console.log('Mouse leaved parent accordion')
-    //emit('onmouseleave')
   }
 
   const mouseDownHandler = (index: number) => {
     timeout = setTimeout(() => {
       activeItemIndex.value = index
-      //emit('onmousedown', index)
-    }, 100)
+      openedIndex.value = null
+    }, 250)
   }
 
   const mouseUpHandler = () => {
     activeItemIndex.value = null
+    mouseY.value = null
     clearTimeout(timeout)
   }
 
-  const mouseOverHandler = (event: MouseEvent) => {
-    if (activeItemIndex.value === null) return
-    console.log((event.target as HTMLElement).closest('.accordion-layout'))
+  const mouseOverHandler = (layoutIndex: number) => {
+    if (activeItemIndex.value === null || activeItemIndex.value === layoutIndex) return
+    const sortedList = JSON.parse(JSON.stringify(props.modelValue))
+    sortedList[activeItemIndex.value] = props.modelValue[layoutIndex]
+    sortedList[layoutIndex] = props.modelValue[activeItemIndex.value]
+    activeItemIndex.value = layoutIndex
+    emit('update:modelValue', sortedList)
+
   }
 
   return {

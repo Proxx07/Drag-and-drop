@@ -114,6 +114,7 @@ const deleteHandler = () => {
     border-radius: 0;
     border-top: 1px solid #E1E1E1;
   }
+
   .title {
     font: var(--font-s);
     color: var(--secondary-color);
@@ -123,6 +124,11 @@ const deleteHandler = () => {
   .value {
     font: var(--font-m-m);
     color: var(--primary-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     &.bold {
       font-weight: bold;
     }
@@ -139,6 +145,7 @@ const deleteHandler = () => {
     height: 3.2rem;
     font-size: 0;
     border-radius: var(--border-radius-s);
+    z-index: 1;
   }
 }
 

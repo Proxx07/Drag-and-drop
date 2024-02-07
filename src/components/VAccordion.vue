@@ -23,38 +23,42 @@ const {
 
 <template>
   <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseleave.stop="mouseLeaveHandler">
-    <div class="accordion-layout" v-for="i in itemsCount" :key="modelValue[i].id" @mouseover.stop="mouseOverHandler" @mouseup.stop="mouseUpHandler">
+    <div
+      class="accordion-layout"
+      v-for="i in itemsCount" :key="modelValue[i].id"
+      @mouseover.stop="mouseOverHandler(i)"
+      @mouseup.stop="mouseUpHandler"
+    >
       <div
-          :class="{
+        :class="{
           'accordion__item': true,
           'accordion__item--child': isChildItem,
           'accordion__item--fixed': activeItemIndex === i
         }"
-          :style="{
+        :style="{
           '--top': activeItemIndex === i ? mouseY : '',
           '--cursor': activeItemIndex === i ? 'grabbing' : 'grab'
         }"
-          @mousedown.stop="mouseDownHandler(i)"
+        @mousedown.stop="mouseDownHandler(i)"
       >
 
         <v-accordion-header
-            v-model:openedIndex="openedIndex"
-            :key="modelValue[i].id"
-            :name="modelValue[i].title"
-            :index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
-            :order="i + 1"
-            :folders="modelValue[i]?.childs"
-            :class="[isChildItem && 'child-item']"
+          v-model:openedIndex="openedIndex"
+          :key="modelValue[i].id"
+          :name="modelValue[i].title"
+          :index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+          :order="i + 1"
+          :folders="modelValue[i]?.childs"
+          :class="[isChildItem && 'child-item']"
         />
-<!--        <Transition name="fade">-->
-          <div class="accordion__item-body" v-if="openedIndex === i">
-            <v-accordion
-                v-if="modelValue[i]?.childs"
-                v-model="modelValue[i].childs"
-                :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
-            />
-          </div>
-<!--        </Transition>-->
+
+        <div class="accordion__item-body" v-if="openedIndex === i">
+          <v-accordion
+            v-if="modelValue[i]?.childs"
+            v-model="modelValue[i].childs"
+            :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -67,7 +71,6 @@ const {
   min-height: 8rem;
   margin-bottom: .6rem;
   border: 1px solid var(--primary-bg);
-
   &:has(> .accordion__item--fixed) {
     border-color: var(--primary);
     border-style: dashed;

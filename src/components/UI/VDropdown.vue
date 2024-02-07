@@ -17,5 +17,6 @@
   width: auto;
   top: 100%;
   box-shadow: var(--shadow);
+  z-index: 2;
 }
 </style>
