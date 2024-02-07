@@ -12,6 +12,9 @@ const {
   mouseY,
   isChildItem,
 
+  editHandler,
+  deleteHandler,
+
   mouseDownHandler,
   mouseMoveHandler,
   mouseLeaveHandler,
@@ -22,23 +25,18 @@ const {
 </script>
 
 <template>
-  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseleave.stop="mouseLeaveHandler">
+  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseleave.stop="mouseLeaveHandler" @mouseup.stop="mouseUpHandler">
     <div
       class="accordion-layout"
       v-for="i in itemsCount" :key="modelValue[i].id"
       @mouseover.stop="mouseOverHandler(i)"
-      @mouseup.stop="mouseUpHandler"
     >
       <div
-        :class="{
-          'accordion__item': true,
-          'accordion__item--child': isChildItem,
-          'accordion__item--fixed': activeItemIndex === i
-        }"
         :style="{
           '--top': activeItemIndex === i ? mouseY : '',
-          '--cursor': activeItemIndex === i ? 'grabbing' : 'grab'
+          '--cursor': activeItemIndex === i ? 'grabbing' : 'grab',
         }"
+        :class="['accordion__item', isChildItem && 'accordion__item--child', activeItemIndex === i && 'accordion__item--fixed']"
         @mousedown.stop="mouseDownHandler(i)"
       >
 
@@ -50,13 +48,18 @@ const {
           :order="i + 1"
           :folders="modelValue[i]?.childs"
           :class="[isChildItem && 'child-item']"
+          @edit="editHandler"
+          @delete="deleteHandler"
         />
 
         <div class="accordion__item-body" v-if="openedIndex === i">
+          <!-- @vue-skip -->
           <v-accordion
             v-if="modelValue[i]?.childs"
             v-model="modelValue[i].childs"
             :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+            @edit="editHandler"
+            @delete="deleteHandler"
           />
         </div>
       </div>
@@ -74,6 +77,7 @@ const {
   &:has(> .accordion__item--fixed) {
     border-color: var(--primary);
     border-style: dashed;
+    cursor: grabbing;
   }
 
   &:has(> .accordion__item--child) {

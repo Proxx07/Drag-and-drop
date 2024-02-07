@@ -4,13 +4,6 @@ import {folder, file, arrow, dots} from "@/assets/icons";
 
 import type {IAccordionItem} from "@/types";
 
-import VIcon from "@/components/UI/VIcon.vue";
-import VChip from "@/components/UI/VChip.vue";
-import VButton from "@/components/UI/VButton.vue";
-import VDropdown from "@/components/UI/VDropdown.vue";
-import VDropdownItem from "@/components/UI/VDropdownItem.vue";
-
-
 const props = defineProps<{
   openedIndex?: number
   index: number | string
@@ -21,9 +14,11 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:openedIndex', index: number | string | null): void
+  (e: 'delete', index: string | number): void
+  (e: 'edit', index: string | number): void
 }>()
 
-const folderNames = props.folders ? computed(() => props.folders.reduce((acc, {title}) => acc + title + ' / ', "")) : ""
+const folderNames = props.folders ? computed(() => props.folders?.reduce((acc, {title}) => acc + title + ' / ', "")) : ""
 
 const nameIcon = computed(() => props.folders ? folder : file)
 
@@ -34,14 +29,13 @@ const arrowClickHandler = (index: number | string) => {
   emit('update:openedIndex', value)
 }
 
-// ToDo emits
-const editHandler = () => {
+const editHandler = (index: string | number) => {
   dropdown.value = false
-  alert('Edit')
+  emit('edit', index)
 }
-const deleteHandler = () => {
+const deleteHandler = (index: string | number) => {
   dropdown.value = false
-  alert('Delete')
+  emit('delete', index)
 }
 </script>
 
@@ -86,8 +80,8 @@ const deleteHandler = () => {
         <v-button :class="['secondary', dropdown && 'active']" :icon="dots" @click="dropdown = !dropdown"/>
         <Transition name="fade">
           <v-dropdown v-if="dropdown">
-            <v-dropdown-item @click="editHandler"> Редактировать </v-dropdown-item>
-            <v-dropdown-item @click="deleteHandler"> Удалить </v-dropdown-item>
+            <v-dropdown-item @click="editHandler(index)"> Редактировать </v-dropdown-item>
+            <v-dropdown-item @click="deleteHandler(index)"> Удалить </v-dropdown-item>
           </v-dropdown>
         </Transition>
       </div>

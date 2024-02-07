@@ -1,9 +1,12 @@
 import '@/assets/main.css'
 import { createApp } from 'vue'
 import App from '@/App.vue'
-import VAccordion from "@/components/VAccordion.vue";
+import {components} from "@/components/UI"
 
 const app = createApp(App);
 
-app.component('VAccordion', VAccordion)
+Object.keys(components).forEach(key => {
+  app.component(key, components[key])
+});
+
 app.mount('#app')

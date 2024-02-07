@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import VIcon from "@/components/UI/VIcon.vue";
-
 defineProps<{
   icon?: string
 }>();

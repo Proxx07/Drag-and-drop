@@ -2,9 +2,16 @@
 import {ref} from "vue";
 import type {IAccordionItem} from "@/types";
 import {list as arr} from "@/data";
-import VChip from "@/components/UI/VChip.vue";
 
 const list = ref<IAccordionItem[]>(arr)
+
+const editHandler = (index: string | number) => {
+  alert(`Редактирование элемента ${index}`)
+}
+
+const deleteHandler = (index: string | number) => {
+  alert(`Удаление элемента ${index}`)
+}
 </script>
 
 <template>
@@ -13,7 +20,7 @@ const list = ref<IAccordionItem[]>(arr)
       Список тем обращения и продуктов
       <v-chip :text="`Найдено: ${list.length}`"/>
     </h1>
-    <v-accordion v-model="list"/>
+    <v-accordion v-model="list" @edit="editHandler" @delete="deleteHandler"/>
   </div>
 </template>
 

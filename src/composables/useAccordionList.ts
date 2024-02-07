@@ -6,15 +6,17 @@ export interface IProps {
 }
 
 export interface IEmits {
-  (e: 'update:modelValue', list: IAccordionItem[]): void;
+  (e: 'update:modelValue', list: IAccordionItem[]): void
+  (e: 'delete', index: string | number): void
+  (e: 'edit', index: string | number): void
 }
 export const useAccordionList = (props: IProps, emit: IEmits) => {
   let timeout: NodeJS.Timeout;
 
-  const openedIndex = ref<number | null>(null);
-  const activeItemIndex = ref<number | null>(null);
+  const openedIndex = ref<number>();
+  const activeItemIndex = ref<number>();
 
-  const mouseY = ref<number | null>()
+  const mouseY = ref<number>()
 
   const itemsCount = computed(() => {
     return Array.from(Array(props.modelValue.length).keys())
@@ -23,31 +25,30 @@ export const useAccordionList = (props: IProps, emit: IEmits) => {
   const isChildItem = computed(() => !!props.parentIndex)
 
   const mouseMoveHandler = (event: MouseEvent) => {
-    if (activeItemIndex.value === null) return
+    if (activeItemIndex.value === undefined) return
     mouseY.value = event.clientY
   }
 
   const mouseLeaveHandler = () => {
-    if (activeItemIndex.value === null) return
-    activeItemIndex.value = null
-    console.log('Mouse leaved parent accordion')
+    if (activeItemIndex.value === undefined) return
+    activeItemIndex.value = undefined
   }
 
   const mouseDownHandler = (index: number) => {
     timeout = setTimeout(() => {
       activeItemIndex.value = index
-      openedIndex.value = null
+      openedIndex.value = undefined
     }, 250)
   }
 
   const mouseUpHandler = () => {
-    activeItemIndex.value = null
-    mouseY.value = null
+    activeItemIndex.value = undefined
+    mouseY.value = undefined
     clearTimeout(timeout)
   }
 
   const mouseOverHandler = (layoutIndex: number) => {
-    if (activeItemIndex.value === null || activeItemIndex.value === layoutIndex) return
+    if (activeItemIndex.value === undefined || activeItemIndex.value === layoutIndex) return
     const sortedList = JSON.parse(JSON.stringify(props.modelValue))
     sortedList[activeItemIndex.value] = props.modelValue[layoutIndex]
     sortedList[layoutIndex] = props.modelValue[activeItemIndex.value]
@@ -56,12 +57,23 @@ export const useAccordionList = (props: IProps, emit: IEmits) => {
 
   }
 
+  const editHandler = (index: string | number) => {
+    emit('edit', index)
+  }
+
+  const deleteHandler = (index: string | number) => {
+    emit('delete', index)
+  }
+
   return {
     openedIndex,
     itemsCount,
     activeItemIndex,
     mouseY,
     isChildItem,
+
+    editHandler,
+    deleteHandler,
 
     mouseUpHandler,
     mouseDownHandler,
