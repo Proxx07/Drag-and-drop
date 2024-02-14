@@ -6,7 +6,7 @@ import type {IAccordionItem} from "@/types";
 
 const props = defineProps<{
   openedIndex?: number
-  index: number | string
+  index: string
   name: string
   order: number
   folders?: IAccordionItem[]
@@ -14,8 +14,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:openedIndex', index: number | string | null): void
-  (e: 'delete', index: string | number): void
-  (e: 'edit', index: string | number): void
+  (e: 'delete', index: string): void
+  (e: 'edit', index: string): void
 }>()
 
 const folderNames = props.folders ? computed(() => props.folders?.reduce((acc, {title}) => acc + title + ' / ', "")) : ""
@@ -29,11 +29,11 @@ const arrowClickHandler = (index: number | string) => {
   emit('update:openedIndex', value)
 }
 
-const editHandler = (index: string | number) => {
+const editHandler = (index: string) => {
   dropdown.value = false
   emit('edit', index)
 }
-const deleteHandler = (index: string | number) => {
+const deleteHandler = (index: string) => {
   dropdown.value = false
   emit('delete', index)
 }

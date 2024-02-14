@@ -17,16 +17,13 @@ const {
 
   mouseDownHandler,
   mouseMoveHandler,
-  mouseLeaveHandler,
   mouseUpHandler,
   mouseOverHandler
 } = useAccordionList(props, emit)
-
 </script>
 
 <template>
-<!--  v-outside-click="mouseUpHandler"-->
-  <div class="accordion" @mousemove.stop="mouseMoveHandler" @mouseup.stop="mouseUpHandler" @mouseleave="mouseLeaveHandler">
+  <div class="accordion" v-outside-click="mouseUpHandler" @mousemove.stop="mouseMoveHandler" @mouseup="mouseUpHandler">
     <div
       class="accordion-layout"
       v-for="i in itemsCount" :key="modelValue[i].id"
@@ -39,13 +36,14 @@ const {
         }"
         :class="['accordion__item', isChildItem && 'accordion__item--child', activeItemIndex === i && 'accordion__item--fixed']"
         @mousedown.stop="mouseDownHandler(i)"
+        @mouseup="mouseUpHandler"
       >
 
         <v-accordion-header
           v-model:openedIndex="openedIndex"
           :key="modelValue[i].id"
           :name="modelValue[i].title"
-          :index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+          :index="parentIndex ? parentIndex + '.' + (i + 1) : `${i + 1}`"
           :order="i + 1"
           :folders="modelValue[i]?.childs"
           :class="[isChildItem && 'child-item']"
@@ -58,7 +56,7 @@ const {
           <v-accordion
             v-if="modelValue[i]?.childs"
             v-model="modelValue[i].childs"
-            :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : i + 1"
+            :parent-index="parentIndex ? parentIndex + '.' + (i + 1) : `${i + 1}`"
             @edit="editHandler"
             @delete="deleteHandler"
           />
@@ -96,7 +94,6 @@ const {
     width: 100%;
     max-width: 165rem;
     margin: -1px 0;
-
     &--fixed {
       position: fixed;
       pointer-events: none;

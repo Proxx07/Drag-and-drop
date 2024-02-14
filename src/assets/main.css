@@ -12,7 +12,7 @@ body {
 }
 
 #app {
-  max-width: 165rem;
+  max-width: 180rem;
   margin: 0 auto;
   width: 100%;
   font-size: 2rem;
@@ -20,5 +20,4 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
 }

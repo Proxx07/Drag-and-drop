@@ -11,10 +11,10 @@ export const VOutsideclick = {
         binding.value(event);
       }
     };
-    document.addEventListener('click', el.clickOutsideEvent);
+    document.body.addEventListener('mouseup', el.clickOutsideEvent);
   },
 
   unmounted(el: ExtendedHtmlElement) {
-    document.removeEventListener('click', el.clickOutsideEvent);
+    document.body.removeEventListener('mouseup', el.clickOutsideEvent);
   }
 }

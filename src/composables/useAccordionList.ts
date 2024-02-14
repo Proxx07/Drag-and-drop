@@ -7,8 +7,8 @@ export interface IProps {
 
 export interface IEmits {
   (e: 'update:modelValue', list: IAccordionItem[]): void
-  (e: 'delete', index: string | number): void
-  (e: 'edit', index: string | number): void
+  (e: 'delete', index: string): void
+  (e: 'edit', index: string): void
 }
 export const useAccordionList = (props: IProps, emit: IEmits) => {
   let timeout: NodeJS.Timeout;
@@ -57,11 +57,11 @@ export const useAccordionList = (props: IProps, emit: IEmits) => {
 
   }
 
-  const editHandler = (index: string | number) => {
+  const editHandler = (index: string) => {
     emit('edit', index)
   }
 
-  const deleteHandler = (index: string | number) => {
+  const deleteHandler = (index: string) => {
     emit('delete', index)
   }
 

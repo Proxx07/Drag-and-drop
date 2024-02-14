@@ -5,11 +5,11 @@ import {list as arr} from "@/data";
 
 const list = ref<IAccordionItem[]>(arr)
 
-const editHandler = (index: string | number) => {
+const editHandler = (index: string) => {
   alert(`Редактирование элемента ${index}`)
 }
 
-const deleteHandler = (index: string | number) => {
+const deleteHandler = (index: string) => {
   alert(`Удаление элемента ${index}`)
 }
 </script>
@@ -33,6 +33,7 @@ h1 {
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 4rem
+  gap: 4rem;
+  padding: 25vh 1.2rem 0;
 }
 </style>
