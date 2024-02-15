@@ -34,6 +34,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 4rem;
-  padding: 25vh 1.2rem 0;
+  padding: 25vh 1.2rem 25vh;
 }
 </style>

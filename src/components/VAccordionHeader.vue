@@ -1,73 +1,38 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
-import {folder, file, arrow, dots} from "@/assets/icons";
+import {arrow, dots} from "@/assets/icons";
+import {useAccordionHeader, type IProps, type IEmits} from "@/composables/useAccordionHeader";
 
-import type {IAccordionItem} from "@/types";
+const props = defineProps<IProps>();
+const emit = defineEmits<IEmits>();
 
-const props = defineProps<{
-  openedIndex?: number
-  index: string
-  name: string
-  order: number
-  folders?: IAccordionItem[]
-}>();
+const {
+  isDropdownOpened,
+  headings,
 
-const emit = defineEmits<{
-  (e: 'update:openedIndex', index: number | string | null): void
-  (e: 'delete', index: string): void
-  (e: 'edit', index: string): void
-}>()
-
-const folderNames = props.folders ? computed(() => props.folders?.reduce((acc, {title}) => acc + title + ' / ', "")) : ""
-
-const nameIcon = computed(() => props.folders ? folder : file)
-
-const dropdown = ref(false);
-
-const arrowClickHandler = (index: number | string) => {
-  const value = props.openedIndex === index ? null : index
-  emit('update:openedIndex', value)
-}
-
-const editHandler = (index: string) => {
-  dropdown.value = false
-  emit('edit', index)
-}
-const deleteHandler = (index: string) => {
-  dropdown.value = false
-  emit('delete', index)
-}
+  toggleDropdown,
+  closeDropdown,
+  arrowClickHandler,
+  editHandler,
+  deleteHandler
+} = useAccordionHeader(props, emit);
 </script>
 
 <template>
   <div :class="['accordion__item-title', openedIndex === order - 1 && 'opened']">
-    <div class="number">
-      <div class="title">№</div>
-      <div class="value">{{index}}</div>
-    </div>
 
-    <div class="name">
-      <div class="title">Название</div>
-      <div :class="['value', folders?.length && 'bold']">
-        <v-icon class="no-fill" :icon="nameIcon"/>
-        {{name}}
+    <div class="item" v-for="item in headings" :key="item.name">
+      <div class="title" v-if="item.value">
+        <v-icon v-if="item.icon" class="no-fill" :icon="item.icon"/>
+        {{item.name}}
       </div>
-    </div>
 
-    <div class="order">
-      <div class="title">Очерёдность</div>
-      <div class="value">{{order}}</div>
-    </div>
-
-    <div class="folders">
-      <div class="title" v-if="folderNames">Подкатегории</div>
-      <div class="value" v-if="folderNames">
-        {{folderNames}}
+      <div :class="['value', item.boldName && 'bold']" v-if="item.value">
+        {{item.value}}
       </div>
     </div>
 
     <div class="actions">
-      <v-chip v-if="props.folders?.length" :text="props.folders.length" type="secondary"/>
+      <v-chip v-if="folders?.length" :text="folders.length" type="secondary"/>
       <span/>
       <v-button
           v-if="folders?.length"
@@ -76,10 +41,10 @@ const deleteHandler = (index: string) => {
           @click="arrowClickHandler(order - 1)"
       />
 
-      <div class="dropdown-wrapper" v-outside-click="() => dropdown = false">
-        <v-button :class="['secondary', dropdown && 'active']" :icon="dots" @click="dropdown = !dropdown"/>
+      <div class="dropdown-wrapper" v-outside-click="closeDropdown">
+        <v-button :class="['secondary', isDropdownOpened && 'active']" :icon="dots" @click="toggleDropdown"/>
         <Transition name="fade">
-          <v-dropdown v-if="dropdown">
+          <v-dropdown v-if="isDropdownOpened">
             <v-dropdown-item @click="editHandler(index)"> Редактировать </v-dropdown-item>
             <v-dropdown-item @click="deleteHandler(index)"> Удалить </v-dropdown-item>
           </v-dropdown>

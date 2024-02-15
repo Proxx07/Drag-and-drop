@@ -3,3 +3,10 @@ export interface IAccordionItem {
   title: string
   childs?: IAccordionItem[]
 }
+
+export interface IAccordionHeadings {
+  name: string,
+  value: string | number,
+  icon?: string,
+  boldName?: boolean
+}
