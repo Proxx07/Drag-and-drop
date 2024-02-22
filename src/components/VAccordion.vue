@@ -35,7 +35,7 @@ const {
           '--cursor': activeItemIndex === i ? 'grabbing' : 'grab',
         }"
         :class="['accordion__item', isChildItem && 'accordion__item--child', activeItemIndex === i && 'accordion__item--fixed']"
-        @mousedown.stop="mouseDownHandler(i)"
+        @mousedown.stop="mouseDownHandler($event, i)"
         @mouseup="mouseUpHandler"
       >
 
